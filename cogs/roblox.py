@@ -12,7 +12,7 @@ class Roblox(commands.Cog):
 
     @app_commands.command(name="roblox", description="Fetch roblox user")
     @app_commands.describe(
-        username = "Your roblox username"
+        username = "roblox username"
     )
     async def roblox(self, interaction: discord.Interaction, username: str):
         try:
