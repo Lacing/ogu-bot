@@ -1,3 +1,4 @@
+import datetime
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -20,14 +21,20 @@ class Github(commands.Cog):
             result = await session.get(f"https://api.github.com/users/{username}") # type: ignore
             result = result.json()
 
+            # Creation Time
+            createdUnix = int(str(datetime.datetime.strptime(result['created_at'].split("T")[0], '%Y-%m-%d').timestamp()).split(".")[0])
+
+            # Last Active Time
+            lastActiveUnix = int(str(datetime.datetime.strptime(result['updated_at'].split("T")[0], '%Y-%m-%d').timestamp()).split(".")[0])
+
             # creating embed
             embed = discord.Embed(
                 title=result['name'],
                 url=f"https://github.com/{username}"
             )
             embed.set_thumbnail(url=result['avatar_url'])
-            embed.add_field(name="Last Active", value=result['updated_at'])
-            embed.add_field(name="Created At", value=result['created_at'])
+            embed.add_field(name="Last Active", value=f"<t:{lastActiveUnix}:f>")
+            embed.add_field(name="Created At", value=f"<t:{createdUnix}:f>")
             embed.add_field(name="Follower Count", value=result['followers'])
             embed.add_field(name="Following Count", value=result['following'])
             embed.add_field(name="Public Repos", value=result['public_repos'])
